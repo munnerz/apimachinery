@@ -19,33 +19,35 @@ go_library(
     ],
 )
 
-go_genrule(
-    name = "set-gen",
-    srcs = [
-        "//hack/boilerplate:boilerplate.go.txt",
-    ],
-    outs = [
-        "byte.go",
-        "doc.go",
-        "empty.go",
-        "int.go",
-        "int64.go",
-        "string.go",
-    ],
-    cmd = """
-$(location //vendor/k8s.io/code-generator/cmd/set-gen) \
-    --input-dirs ./vendor/k8s.io/apimachinery/pkg/util/sets/types \
-    --output-base $$(dirname $$(dirname $(location :byte.go))) \
-    --go-header-file $(location //hack/boilerplate:boilerplate.go.txt) \
-    --output-package sets
-    """,
-    go_deps = [
-        "//vendor/k8s.io/apimachinery/pkg/util/sets/types:go_default_library",
-    ],
-    tools = [
-        "//vendor/k8s.io/code-generator/cmd/set-gen",
-    ],
-)
+# This does not work when using Bazel to build client-go / apimachinery.
+# See https://github.com/kubernetes/kubernetes/issues/50975
+#go_genrule(
+#    name = "set-gen",
+#    srcs = [
+#        "//hack/boilerplate:boilerplate.go.txt",
+#    ],
+#    outs = [
+#        "byte.go",
+#        "doc.go",
+#        "empty.go",
+#        "int.go",
+#        "int64.go",
+#        "string.go",
+#    ],
+#    cmd = """
+#$(location //vendor/k8s.io/code-generator/cmd/set-gen) \
+#    --input-dirs ./vendor/k8s.io/apimachinery/pkg/util/sets/types \
+#    --output-base $$(dirname $$(dirname $(location :byte.go))) \
+#    --go-header-file $(location //hack/boilerplate:boilerplate.go.txt) \
+#    --output-package sets
+#    """,
+#    go_deps = [
+#        "//vendor/k8s.io/apimachinery/pkg/util/sets/types:go_default_library",
+#    ],
+#    tools = [
+#        "//vendor/k8s.io/code-generator/cmd/set-gen",
+#    ],
+#)
 
 go_test(
     name = "go_default_test",
